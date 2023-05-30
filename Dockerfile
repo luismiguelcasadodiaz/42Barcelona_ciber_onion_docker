@@ -64,6 +64,7 @@ COPY index.html index.html
 #ENTRYPOINT ["/bin/bash"]
 #CMD ["Docker"]
 EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
 
 #install python

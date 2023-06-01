@@ -1,8 +1,0 @@
-FROM nginx:latest
-
-
-EXPOSE 80
-EXPOSE 443
-CMD ["nginx", "-g", "daemon off;"]
-#WORKDIR /usr/share/nginx/html
-#COPY ./index.html index.html

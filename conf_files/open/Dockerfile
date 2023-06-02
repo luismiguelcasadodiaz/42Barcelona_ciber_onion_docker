@@ -1,5 +1,6 @@
 FROM nginx:latest
 
+# -y & -q avoids answer questions in instalation process.
 RUN apt update
 RUN apt upgrade -y -q
 RUN apt install openssh-server -y -q

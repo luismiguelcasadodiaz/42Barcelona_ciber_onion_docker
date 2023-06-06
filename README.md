@@ -138,3 +138,16 @@ We will use for our project  snowflake
 
 
 ![](./docs/dockerportmappping.png)
+
+
+![Differences between python docker images](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
+
+# Lessons
+Python package python depends on C libraries. 
+No all Docker python images have tools to build Numpy python library
+
+Alpine based images do not have. You must install missing building tools wiht APK add
+Slim tagged images neither do have. you must install them using apt-get.
+
+This is the reason why the Docker file for the Data Python Dash service Installs aditional packages
+tht are removed after Numpy Instalation.

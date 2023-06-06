@@ -1,0 +1,25 @@
+version: '2'
+services:
+  open:
+    build: ./open
+    ports:
+      - 80:80
+  data:
+    build: ./data
+      ports:
+      - 81:80
+  dark:
+    build: ./dark
+      ports:
+      - 82:80
+  openssh-server:
+      image: lscr.io/linuxserver/openssh-server:latest
+      container_name: openssh-server
+      hostname: openssh-server #optional
+      environment:
+        - PUID=1000
+        - GUID=1000
+        - TZ=CET
+        
+      ports:
+      - 2222:2222

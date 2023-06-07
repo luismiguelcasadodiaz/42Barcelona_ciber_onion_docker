@@ -1,9 +1,9 @@
-FROM nginx:latest
+FROM nginx:1.25.0-alpine-slim
 
-# -y & -q avoids answer questions in instalation process.
-RUN apt update
-RUN apt upgrade -y -q
-RUN apt install openssh-server -y -q
+# -y & -q avoids answer questions in instalation process.ls
+RUN apk update
+RUN apk upgrade -y -q
+RUN apk add openssh-server -y -q
 
 WORKDIR /etc/ssh
 #RUN sed -i -e '/^#Port 22/i Protocol 2' sshd_config
@@ -31,17 +31,16 @@ RUN mkdir .ssh
 RUN chmod 700 .ssh
 WORKDIR /home/$USER/.ssh
 COPY id_rsa.pub id_rsa.pub
-COPY id_rsa id_rsa
 COPY authorized_keys authorized_keys
 RUN chmod 600 authorized_keys
 
-RUN service ssh start
+#RUN /bin/sshd
 
 WORKDIR /usr/share/nginx/html
 COPY index.html index.html
 
 EXPOSE 80
-EXPOSE 22
+EXPOSE 4242
 
 CMD ["nginx", "-g", "daemon off;"]
 

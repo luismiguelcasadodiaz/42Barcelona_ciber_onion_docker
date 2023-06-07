@@ -143,6 +143,7 @@ We will use for our project  snowflake
 ![Differences between python docker images](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
 
 # Lessons
+## Data Docker
 Python package python depends on C libraries. 
 No all Docker python images have tools to build Numpy python library
 
@@ -150,4 +151,31 @@ Alpine based images do not have. You must install missing building tools wiht AP
 Slim tagged images neither do have. you must install them using apt-get.
 
 This is the reason why the Docker file for the Data Python Dash service Installs aditional packages
-tht are removed after Numpy Instalation.
+that are removed after Numpy Instalation.
+
+Addicionally, Dash app.run_service has a host parameter dafaulted to 127.0.0.1. That default configuration did not worked for me. 
+> app.run_server(debug=True, port=1234)
+
+I changed it to 
+> app.run_server(debug=True, host= IPAddr, port=1234)
+
+ajrdqcz5sy4y4fwrdre754vro6jd57e425bzw2z6ei34u6ztkzxos5yd.onion
+
+
+onion_address = base32(PUBKEY | CHECKSUM | VERSION) + ".onion"
+ CHECKSUM = H(".onion checksum" | PUBKEY | VERSION)[:2]
+
+ where:
+   - PUBKEY is the 32 bytes ed25519 master pubkey of the hidden service.
+   - VERSION is an one byte version field (default value '\x03')
+   - ".onion checksum" is a constant string
+   - CHECKSUM is truncated to two bytes before inserting it in onion_address
+
+
+   ## Dark Docker
+   it is the container with TOR. 
+   In the configuration files, i use a container name "data" that it is the container that show a Dashboard .
+   Docekr internal DNS will solve the name.
+
+> HiddenServiceDir /var/lib/tor/hidden_service/
+> HiddenServicePort 80 data:1234

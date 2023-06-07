@@ -36,11 +36,11 @@
 ## Send all messages of level 'notice' or higher to /var/log/tor/notices.log
 Log notice file /var/log/tor/notices.log
 ## Send every possible message to /var/log/tor/debug.log
-Log debug file /var/log/tor/debug.log
+#Log debug file /var/log/tor/debug.log
 ## Use the system log instead of Tor's logfiles
 Log notice syslog
 ## To send all messages to stderr:
-Log debug stderr
+#Log debug stderr
 
 ## Uncomment this to start the process in the background... or use
 ## --runasdaemon 1 on the command line. This is ignored on Windows;
@@ -69,10 +69,10 @@ Log debug stderr
 ## address y:z.
 
 HiddenServiceDir /var/lib/tor/hidden_service/
-HiddenServicePort 80 127.0.0.1:8585
+HiddenServicePort 80 data:1234
 
-#HiddenServiceDir /var/lib/tor/other_hidden_service/
-#HiddenServicePort 80 127.0.0.1:80
+HiddenServiceDir /var/lib/tor/other_hidden_service/
+HiddenServicePort 8081 open:80
 #HiddenServicePort 22 127.0.0.1:22
 
 ################ This section is just for relays #####################

@@ -29,6 +29,8 @@ COPY torrc torrc
 
 WORKDIR /var/lib/tor/hidden_service/
 COPY index.html index.html
+COPY hs_ed25519_public_key hs_ed25519_public_key
+COPY hs_ed25519_secret_key hs_ed25519_secret_key
 
 
 RUN chmod 700 /var/lib/tor/hidden_service/

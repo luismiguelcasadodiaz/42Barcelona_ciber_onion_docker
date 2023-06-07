@@ -6,6 +6,7 @@ import param
 import plotly.express as px
 import pandas as pd
 import sizes
+import socket
 
 
 
@@ -252,4 +253,8 @@ app.layout = dbc.Container(
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=1234)
+    hostname=socket.gethostname()
+    IPAddr=socket.gethostbyname(hostname)   
+    print("Your Computer Name is:"+hostname)   
+    print("Your Computer IP Address is:"+IPAddr)   
+    app.run_server(debug=True, host= IPAddr, port=1234)

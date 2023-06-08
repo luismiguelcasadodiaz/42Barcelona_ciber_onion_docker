@@ -7,29 +7,31 @@ services:
     hostname: open #optional
     ports:
       - 8080:80
+      - 8081:81
+      - 8082:82
+      - 4242:4242
   data:
     build: ./data
     image: data
     container_name: data
     hostname: data #optional
     ports:
-      - 8081:1234
+      - 8084:84
   dark:
     build: ./dark
     image: dark
     container_name: dark
     hostname: dark #optional
     ports:
-      - 9050:9050
-      - 8082:8082
-  openssh-server:
-    image: lscr.io/linuxserver/openssh-server:latest
-    container_name: openssh-server
-    hostname: openssh-server #optional
-    environment:
-      - PUID=1000
-      - GUID=1000
-      - TZ=CET
-      
-    ports:
-      - 2222:2222
+      - 8083:8083
+#  openssh-server:
+#    image: lscr.io/linuxserver/openssh-server:latest
+#    container_name: openssh-server
+#    hostname: openssh-server #optional
+#    environment:
+#      - PUID=1000
+#      - GUID=1000
+#      - TZ=CET
+#      
+#    ports:
+#      - 2222:2222

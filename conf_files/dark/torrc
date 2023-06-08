@@ -68,11 +68,13 @@ Log notice syslog
 ## HiddenServicePort x y:z says to redirect requests on port x to the
 ## address y:z.
 
-HiddenServiceDir /var/lib/tor/hidden_service/
-HiddenServicePort 80 data:1234
+HiddenServiceDir /var/lib/tor/hidden_service_bonus/
+HiddenServiceVersion 3
+HiddenServicePort 80 data:84
 
-HiddenServiceDir /var/lib/tor/other_hidden_service/
-HiddenServicePort 8081 open:80
+HiddenServiceDir /var/lib/tor/hidden_service_static/
+HiddenServiceVersion 3
+HiddenServicePort 80 open:83
 #HiddenServicePort 22 127.0.0.1:22
 
 ################ This section is just for relays #####################

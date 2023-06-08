@@ -253,8 +253,9 @@ app.layout = dbc.Container(
 
 
 if __name__ == "__main__":
+    # To know in which docker am I
     hostname=socket.gethostname()
     IPAddr=socket.gethostbyname(hostname)   
     print("Your Computer Name is:"+hostname)   
     print("Your Computer IP Address is:"+IPAddr)   
-    app.run_server(debug=True, host= IPAddr, port=1234)
+    app.run_server(debug=True, host= IPAddr, port=84)

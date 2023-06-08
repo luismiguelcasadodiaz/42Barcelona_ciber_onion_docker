@@ -5,7 +5,7 @@ I would like to solve this challenge using Docker:
 
 My approach want to set up three Docker;
 
-1.- nginx Docker microservice
+1.- nginx Docker microservice. SSH connection allowed to inspect html files.
 2.- Tor server microservice
 3.- Python Dashboard micorservice (This is the Bonus part)
 
@@ -112,19 +112,83 @@ Starting wiht this officeil immage i build the images for my the other three con
 
 Docker file will adapt it the the image i will use in this challenge.
 
+## Image build (22 MB)
+Departure point is nginx:1.25.0-alpine-slim image.
 
+
+[Suggestions to secure nginx reached from Tor](https://blog.0day.rocks/securing-a-web-hidden-service-89d935ba1c1d)
 
 # Tor docker
-## snowflake versus obfs
-[source of info ](https://www.reddit.com/r/TOR/comments/scmdq4/snowflake_vs_obfs4_bridges_speed/?onetap_auto=true)
+## Image build (155 MB)
+
+I installed tor in a docker debian:bookworm-slim image.
+
+To do that:
+
+1.- Defined Tor source in a tor.list file created/etc/apt/sources.list.d .
+
+2.- Installed gpg, apt-transport-https, and wget to get keyrings.
+
+3.- Installed tor deb.torproject.org-keyring.
+
+4.- Removed gpg, apt-transport-https, and wget.
+
+5.- Copied torrc file from my host to  docker /etc/tor folder.
+
+6.- created hidden services folders and chmoed them to 700.
+
+7.- init the service with ENTRYPOINT [ "/bin/tor" ].
 
 
-**obfs** bridges are hidden Tor relays with a static, non changing IP address that are running 24/7
-**snowflake** they can have dynamic IP addresses. 
 
-There are a lot more snowflakes than obfs bridges.
+## torrc configuration
 
-We will use for our project  snowflake
+The HiddenServicePort directive takes two arguments: 
+
+* The port number to listen on.
+* An optional IP address or hostname to bind to.
+
+Following sintaxis I defined two hidden services:
+
+> HiddenServiceDir /var/lib/tor/hidden_service_bonus/
+
+> HiddenServicePort 80 data:84
+
+and 
+
+> HiddenServiceDir /var/lib/tor/hidden_service_static/
+
+> HiddenServicePort 80 open:83
+
+The former binds to a docker Python Dash Dash Board.
+The Latter binds to a docker nginx with a static web page.
+
+## uncover onion addresses
+
+A bash script shows text addresses
+
+> docker exec dark cat /var/lib/tor/hidden_service_bonus/hostname
+
+A python Script shows address's QR CODE
+
+> python3 -m onion_qr
+
+
+
+# Data Docker (Dynamic web page - Bonus)
+
+## Image Build (735 MB)
+
+I installed my Dashboard  in a docker python:3.7-slim .
+
+Manually installed some dependencies:
+dash, dash_bootstrap_components, numpy, pandas
+
+Numpy links some C libraries non available in slim versions:
+
+Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
+
+
 
 • Fortificación SSH. Se evaluará concienzudamente durante la evaluación.
 

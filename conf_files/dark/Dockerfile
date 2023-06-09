@@ -34,6 +34,9 @@ RUN chmod 700 /var/lib/tor/hidden_service_bonus/
 RUN mkdir /var/lib/tor/hidden_service_static/
 RUN chmod 700 /var/lib/tor/hidden_service_static/
 
+VOLUME hidden_service_bonus
+VOLUME hidden_
+
 ENTRYPOINT [ "/bin/tor" ]
 
 

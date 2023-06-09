@@ -74,7 +74,7 @@ HiddenServicePort 80 data:84
 
 HiddenServiceDir /var/lib/tor/hidden_service_static/
 HiddenServiceVersion 3
-HiddenServicePort 80 open:83
+HiddenServicePort 80 open:81
 #HiddenServicePort 22 127.0.0.1:22
 
 ################ This section is just for relays #####################

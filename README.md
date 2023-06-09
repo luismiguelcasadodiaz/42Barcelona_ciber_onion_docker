@@ -10,35 +10,6 @@ My approach want to set up three Docker;
 3.- Python Dashboard micorservice (This is the Bonus part)
 
 
-
-# Nginx official docker image
-
-I use the official docker image with nginx
-
-> docker pull nginx
-
-I run the image an log in the container with a terminal to see if there is any update
-
-> apt update
-> apt list --upgradable
-
-I get 
-
-> libssl1.1/stable-security 1.1.1n-0+deb11u5 amd64 [upgradable from: 1.1.1n-0+deb11u4]
-> openssl/stable-security 1.1.1n-0+deb11u5 amd64 [upgradable from: 1.1.1n-0+deb11u4]
-
-
-
-> docker run --name some-nginx -d -p 8080:80 nginx
-
-
-
-default directoris for the official nginx image are:
-
-> logs /var/log/nginx/error.log
-> root   /usr/share/nginx/html;
-> index  index.html index.htm;
-
 ## nginx config files
 
 ### /etc/nginx.nginx.conf
@@ -76,8 +47,8 @@ http {
     include /etc/nginx/conf.d/*.conf;
 }
 ```
-
 ###  /etc/nginx/conf.d/default.conf
+
 
 ```
 server {
@@ -100,7 +71,36 @@ server {
     location = /50x.html {
         root   /usr/share/nginx/html;
     }
+}
+```
 
+
+###  /etc/nginx/conf.d/open.conf
+This is the configuration file used to render de hiddn service thru Tor.
+
+```
+server {
+       # server ip #
+       # only allows request comming to this address.
+       listen 0.0.0.0:81;
+
+       # virtual server name i.e. domain name #
+       server_name www.open.net;
+
+       # document root #
+       root /var/www/open;
+       index index_open.html;
+
+       # log files
+       access_log  /var/log/nginx/www.open.net_access.log;
+       error_log   /var/log/nginx/www.open.net_error.log;
+
+       # cache files on browser level #
+       # Directives to send expires headers and turn off 404 error logging. #
+       location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ 
+       {
+       access_log off; log_not_found off; expires max;
+       }
 }
 
 ```
@@ -158,7 +158,7 @@ and
 
 > HiddenServiceDir /var/lib/tor/hidden_service_static/
 
-> HiddenServicePort 80 open:83
+> HiddenServicePort 80 open:81
 
 The former binds to a docker Python Dash Dash Board.
 The Latter binds to a docker nginx with a static web page.

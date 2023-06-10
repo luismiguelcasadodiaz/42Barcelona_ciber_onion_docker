@@ -96,7 +96,7 @@ This is the configuration file used to render de hidden service thru Tor.
 
 Here is a point __for improvement__ changing 0.0.0.0 for the dark docker ip address.
 
-With this i would restrict the ip the incoming request comes from.
+With this i would restrict incoming ip the request comes from.
 
 
 ```
@@ -140,7 +140,8 @@ you will see 3 sections in this docker file: one for __Nginx__, one for __ssh__ 
 
 Runnig bash's sed command dockerfile adjust at will sshd_config.
 
-To do: Lock ssh connecitio th the dir wiht ChrootDirectory + ForceCommand
+To do: Lock ssh connection to the dir with ChrootDirectory + ForceCommand.
+
 I need to adjust folder ownership correclty. 
 
 ### user _creation
@@ -155,8 +156,12 @@ This was constantly rejecting my ssh connection cause server could not set up th
 To start both services, the docker entry point is a sh script.
 
 > /usr/sbin/nginx -g 'daemon off;' &
+
 > ssh-keygen -A
+
 > /usr/sbin/sshd -D -e "$@"
+
+Please read comments inside entrypoint.sh for a better understanding of flags.
 
 
 
@@ -236,6 +241,9 @@ dash, dash_bootstrap_components, numpy, pandas
 Numpy links some C libraries non available in slim versions:
 
 Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
+
+
+![Pyrhon Dash Dashboard ](pythonDashboard.png)
 
 ---
 # Lessons

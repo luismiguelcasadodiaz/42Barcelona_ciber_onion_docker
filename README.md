@@ -242,21 +242,6 @@ Numpy links some C libraries non available in slim versions:
 
 Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
 
-
-![Pyrhon Dash Dashboard ](pythonDashboard.png)
-
----
-# Lessons
-## Data Docker
-
-
-![](./docs/dockerportmappping.png)
-
-
-![Differences between python docker images](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
-
-
-Python package python depends on C libraries. 
 No all-Docker python images have tools to build Numpy python library
 
 Alpine based images do not have. You must install missing building tools with APK add
@@ -265,12 +250,29 @@ Slim tagged images neither do have. you must install them using apt-get.
 This is the reason why the Docker file for the Data Python Dash service Installs additional packages
 that are removed after Numpy installation.
 
+
 Additionally, Dash app.run_service has a host parameter defaulted to 127.0.0.1. 
 That default configuration did not worked for me. 
 > app.run_server(debug=True, port=1234)
 
 I changed it to 
 > app.run_server(debug=True, host= IPAddr, port=1234)
+
+
+![Pyrhon Dash Dashboard ](pythonDashboard.png)
+
+---
+# some personal notes
+
+
+![](./docs/dockerportmappping.png)
+
+
+![Differences between python docker images](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
+
+
+
+
 
 
 
@@ -283,10 +285,4 @@ onion_address = base32(PUBKEY | CHECKSUM | VERSION) + ".onion"
    - VERSION is an one byte version field (default value '\x03')
    - ".onion checksum" is a constant string
    - CHECKSUM is truncated to two bytes before inserting it in onion_address
-
-
-   ## Dark Docker
-   it is the container with TOR. 
-   In the configuration files, i use a container name "data" that it is the container that show a Dashboard .
-   Docekr internal DNS will solve the name.
 

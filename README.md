@@ -136,16 +136,29 @@ Departure point is nginx:1.25.0-alpine-slim image.
 
 you will see 3 sections in this docker file: one for __Nginx__, one for __ssh__ and one for __user creation__.
 
-to start both services, the docker entry point is a sh script.
+### SSHD fortification
 
-> /usr/sbin/nginx -g 'daemon off;' &
-> ssh-keygen -A
-> /usr/sbin/sshd -D -e "$@"
+Runnig bash's sed command dockerfile adjust at will sshd_config.
+
+To do: Lock ssh connecitio th the dir wiht ChrootDirectory + ForceCommand
+I need to adjust folder ownership correclty. 
+
+### user _creation
 
 I suffered some headache here creating the user for the ssh service.
 The problem is that rutinary i set a /bin/bash shell for the added User.
 I was not aware that the alpine image comes with /bin/sh __only__.
 This was constantly rejecting my ssh connection cause server could not set up the shell for the user.
+
+### Docker initialization
+
+To start both services, the docker entry point is a sh script.
+
+> /usr/sbin/nginx -g 'daemon off;' &
+> ssh-keygen -A
+> /usr/sbin/sshd -D -e "$@"
+
+
 
 
 [Suggestions to secure nginx reached from Tor](https://blog.0day.rocks/securing-a-web-hidden-service-89d935ba1c1d)
@@ -224,13 +237,6 @@ Numpy links some C libraries non available in slim versions:
 
 Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
 
-
-
-• Fortificación SSH. Se evaluará concienzudamente durante la evaluación.
-
-
-
-
 ---
 # Lessons
 ## Data Docker
@@ -243,15 +249,16 @@ Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
 
 
 Python package python depends on C libraries. 
-No all Docker python images have tools to build Numpy python library
+No all-Docker python images have tools to build Numpy python library
 
-Alpine based images do not have. You must install missing building tools wiht APK add
+Alpine based images do not have. You must install missing building tools with APK add
 Slim tagged images neither do have. you must install them using apt-get.
 
-This is the reason why the Docker file for the Data Python Dash service Installs aditional packages
-that are removed after Numpy Instalation.
+This is the reason why the Docker file for the Data Python Dash service Installs additional packages
+that are removed after Numpy installation.
 
-Addicionally, Dash app.run_service has a host parameter dafaulted to 127.0.0.1. That default configuration did not worked for me. 
+Additionally, Dash app.run_service has a host parameter defaulted to 127.0.0.1. 
+That default configuration did not worked for me. 
 > app.run_server(debug=True, port=1234)
 
 I changed it to 

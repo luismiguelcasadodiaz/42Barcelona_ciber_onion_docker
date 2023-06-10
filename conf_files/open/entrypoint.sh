@@ -8,6 +8,12 @@
 # Start SSH service
 
 ssh-keygen -A
+# By using the -A flag, ssh-keygen will generate key files for all available 
+# authentication methods in OpenSSH (such as RSA, DSA, ECDSA, and ED25519) and 
+# store them in the default location, which is typically the .ssh directory 
+# in your user's home directory. 
+
+
 /usr/sbin/sshd -D -e "$@"
 
 # "-D": This flag tells the SSH daemon to run in the foreground and stay attached to the terminal.

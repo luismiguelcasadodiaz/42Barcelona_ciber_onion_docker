@@ -1,23 +1,24 @@
 # 42Barcelona_ciber_Ft_onion
 Serve a web page from a Tor network hidden service.
 
-I would like to solve this challenge using Docker: Select the images to use is a leraning process.
-Finalli i worked wiht 3 different images. one for each micorservice.
+I would like to solve this challenge using Docker.
+Selecting the right docker images is by them self a learning process.
+Finally i worked with 3 different images. One for each server.
 
-My approach want to set up three Docker;
+My approach wants to set up three Docker;
 
-1.- nginx Docker microservice. SSH connection allowed to inspect html files.
+1.- nginx server. SSH connection allowed to inspect html files.
 
-2.- Tor server microservice.
+2.- Tor server.
 
-3.- Python Dashboard micorservice (This is the Bonus part).
+3.- Python Dashboard server (This is the Bonus part).
 
 
 ---
 # nginx config files
 
-Nginx default listne port is 80.
-I set up in the port 81 the static hidden service accesibel thur tor.
+Nginx default listen port is 80.
+I set up in the port 81 the static hidden service accessible thur tor.
 
 ## General setting: /etc/nginx.nginx.conf
 
@@ -95,7 +96,7 @@ This is the configuration file used to render de hidden service thru Tor.
 
 Here is a point __for improvement__ changing 0.0.0.0 for the dark docker ip address.
 
-Wiht this i would restrict the ip the incoming request comes from.
+With this i would restrict the ip the incoming request comes from.
 
 
 ```
@@ -126,25 +127,29 @@ server {
 ```
 
 
-# Nginx Docker wiht static html page
+# Nginx Docker with static html page
 
-Docker file will adapt it the the image i will use in this challenge.
+Docker file will adapt it the image i will use in this challenge.
 
 ## Image build (22 MB)
 Departure point is nginx:1.25.0-alpine-slim image.
 
 you will see 3 sections in this docker file: one for __Nginx__, one for __ssh__ and one for __user creation__.
 
-to start both services, the docjer entry point is a sh script.
+to start both services, the docker entry point is a sh script.
 
-I suffered som headache here creating the usser for the ssh service.
+> /usr/sbin/nginx -g 'daemon off;' &
+> ssh-keygen -A
+> /usr/sbin/sshd -D -e "$@"
+
+I suffered some headache here creating the user for the ssh service.
 The problem is that rutinary i set a /bin/bash shell for the added User.
-I was not aware that the alpine image comes wiht /bin/sh __only__.
-This was continously rejecting my ssh conexion caus server was nos able to set up the shell for the user.
+I was not aware that the alpine image comes with /bin/sh __only__.
+This was constantly rejecting my ssh connection cause server could not set up the shell for the user.
 
 
 [Suggestions to secure nginx reached from Tor](https://blog.0day.rocks/securing-a-web-hidden-service-89d935ba1c1d)
-
+---
 # Tor docker
 ## Image build (155 MB)
 
@@ -175,7 +180,7 @@ The HiddenServicePort directive takes two arguments:
 * The port number to listen on.
 * An optional IP address or hostname to bind to.
 
-Following sintaxis I defined two hidden services:
+Following syntaxis I defined two hidden services:
 
 > HiddenServiceDir /var/lib/tor/hidden_service_bonus/
 
@@ -196,16 +201,16 @@ A bash script shows text addresses.
 
 > docker exec dark cat /var/lib/tor/hidden_service_bonus/hostname
 
-You will see somethin like this ajrdqcz5sy4y4fwrdre754vro6jd57e425bzw2z6ei34u6ztkzxos5yd.onion
+You will see something like this ajrdqcz5sy4y4fwrdre754vro6jd57e425bzw2z6ei34u6ztkzxos5yd.onion
 
-In this project each time you execute it a new onion address is created. Tor DOcker would have to have a docker volumen to make some data persistant.
+In this project each time you execute it a new onion address is created. Tor DOcker would have to have a docker volume to make some data persistent.
 
 A python Script shows address's QR CODE
 
 > python3 -m onion_qr
 
 
-
+---
 # Data Docker (Dynamic web page - Bonus)
 
 ## Image Build (735 MB)
@@ -224,12 +229,11 @@ Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
 • Fortificación SSH. Se evaluará concienzudamente durante la evaluación.
 
 
-• Una web interactiva, más impresionante que una triste página estática. Puedes utilizar librerías externas para ello, pero no un framework. Si no entiendes la diferencia entre ambos, no lo hagas.
 
 
-
-# Static we page
-
+---
+# Lessons
+## Data Docker
 
 
 ![](./docs/dockerportmappping.png)
@@ -237,8 +241,7 @@ Must Install make, gcc, build-essential, dpkg-dev, libjpeg-dev.
 
 ![Differences between python docker images](https://medium.com/swlh/alpine-slim-stretch-buster-jessie-bullseye-bookworm-what-are-the-differences-in-docker-62171ed4531d)
 
-# Lessons
-## Data Docker
+
 Python package python depends on C libraries. 
 No all Docker python images have tools to build Numpy python library
 

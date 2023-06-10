@@ -3,6 +3,8 @@ FROM nginx:1.25.0-alpine-slim
 # ------------------------        NGINX SERVICE SETUP
 WORKDIR /etc/nginx
 #RUN sed -i -e '/    keepalive_timeout  65;/a     server_tokens off;' nginx.conf
+# This is to ensure your server have a tiny fingerprint
+# no specific headers or unique version number to track you down.
 
 WORKDIR /etc/nginx/conf.d
      
@@ -13,11 +15,6 @@ COPY index.html index.html
 
 WORKDIR /var/www/open
 COPY index_open.html index_open.html
-#EXPOSE 80
-#EXPOSE 81
-#EXPOSE 82
-#EXPOSE 83
-#EXPOSE 4242
 
 # ------------------------        Container users creation
 #I use this user at 42 Barcelona
@@ -75,15 +72,6 @@ COPY banner.txt banner.txt
 # SFTP (SSH File Transfer Protocol) for file operations. 
 # This further limits their capabilities to navigate the filesystem.
 
-#RUN ssh-keygen -A
-#RUN /usr/sbin/sshd -D -e "$@"
-#RUN /usr/sbin/sshd  -e "$@"
-
-
-#RUN /usr/sbin/sshd
-
-# This is to ensure your server have a tiny fingerprint
-# no specific headers or unique version number to track you down.
 
 EXPOSE $PORT
 ENTRYPOINT ["/entrypoint.sh"]

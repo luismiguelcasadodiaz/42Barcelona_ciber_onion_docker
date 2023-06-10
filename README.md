@@ -1,18 +1,27 @@
 # 42Barcelona_ciber_Ft_onion
 Serve a web page from a Tor network hidden service.
 
-I would like to solve this challenge using Docker:
+I would like to solve this challenge using Docker: Select the images to use is a leraning process.
+Finalli i worked wiht 3 different images. one for each micorservice.
 
 My approach want to set up three Docker;
 
 1.- nginx Docker microservice. SSH connection allowed to inspect html files.
-2.- Tor server microservice
-3.- Python Dashboard micorservice (This is the Bonus part)
+
+2.- Tor server microservice.
+
+3.- Python Dashboard micorservice (This is the Bonus part).
 
 
-## nginx config files
+---
+# nginx config files
 
-### /etc/nginx.nginx.conf
+Nginx default listne port is 80.
+I set up in the port 81 the static hidden service accesibel thur tor.
+
+## General setting: /etc/nginx.nginx.conf
+
+Please read inside to learn how to secure it a bit more.
 
 ```
 user  nginx;
@@ -42,13 +51,18 @@ http {
 
     keepalive_timeout  65;
 
+    # if in the docker file uncomment this, helps to reduce hidden service footprint
+    # when an outsider request the server to introdude himself.
+    #RUN sed -i -e '/    keepalive_timeout  65;/a     server_tokens off;' nginx.conf
+
     #gzip  on;
 
     include /etc/nginx/conf.d/*.conf;
 }
 ```
-###  /etc/nginx/conf.d/default.conf
+## 80 port server setting:  /etc/nginx/conf.d/default.conf
 
+This is the configuration file used to render default service.
 
 ```
 server {
@@ -75,15 +89,21 @@ server {
 ```
 
 
-###  /etc/nginx/conf.d/open.conf
-This is the configuration file used to render de hiddn service thru Tor.
+## 81 port server setting: /etc/nginx/conf.d/open.conf
+
+This is the configuration file used to render de hidden service thru Tor.
+
+Here is a point __for improvement__ changing 0.0.0.0 for the dark docker ip address.
+
+Wiht this i would restrict the ip the incoming request comes from.
+
 
 ```
 server {
        # server ip #
        # only allows request comming to this address.
        listen 0.0.0.0:81;
-
+       
        # virtual server name i.e. domain name #
        server_name www.open.net;
 
@@ -105,8 +125,6 @@ server {
 
 ```
 
-Starting wiht this officeil immage i build the images for my the other three containers
-
 
 # Nginx Docker wiht static html page
 
@@ -114,6 +132,15 @@ Docker file will adapt it the the image i will use in this challenge.
 
 ## Image build (22 MB)
 Departure point is nginx:1.25.0-alpine-slim image.
+
+you will see 3 sections in this docker file: one for __Nginx__, one for __ssh__ and one for __user creation__.
+
+to start both services, the docjer entry point is a sh script.
+
+I suffered som headache here creating the usser for the ssh service.
+The problem is that rutinary i set a /bin/bash shell for the added User.
+I was not aware that the alpine image comes wiht /bin/sh __only__.
+This was continously rejecting my ssh conexion caus server was nos able to set up the shell for the user.
 
 
 [Suggestions to secure nginx reached from Tor](https://blog.0day.rocks/securing-a-web-hidden-service-89d935ba1c1d)
@@ -165,9 +192,13 @@ The Latter binds to a docker nginx with a static web page.
 
 ## uncover onion addresses
 
-A bash script shows text addresses
+A bash script shows text addresses. 
 
 > docker exec dark cat /var/lib/tor/hidden_service_bonus/hostname
+
+You will see somethin like this ajrdqcz5sy4y4fwrdre754vro6jd57e425bzw2z6ei34u6ztkzxos5yd.onion
+
+In this project each time you execute it a new onion address is created. Tor DOcker would have to have a docker volumen to make some data persistant.
 
 A python Script shows address's QR CODE
 
@@ -223,7 +254,7 @@ Addicionally, Dash app.run_service has a host parameter dafaulted to 127.0.0.1. 
 I changed it to 
 > app.run_server(debug=True, host= IPAddr, port=1234)
 
-ajrdqcz5sy4y4fwrdre754vro6jd57e425bzw2z6ei34u6ztkzxos5yd.onion
+
 
 
 onion_address = base32(PUBKEY | CHECKSUM | VERSION) + ".onion"
@@ -241,5 +272,3 @@ onion_address = base32(PUBKEY | CHECKSUM | VERSION) + ".onion"
    In the configuration files, i use a container name "data" that it is the container that show a Dashboard .
    Docekr internal DNS will solve the name.
 
-> HiddenServiceDir /var/lib/tor/hidden_service/
-> HiddenServicePort 80 data:1234
